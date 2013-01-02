@@ -10,10 +10,8 @@ namespace Fireworks
 {
 	public abstract class Firework : Emitter
 	{
-		protected bool exploded = false;
-
-		protected Firework(Vector2f position, Vector2f initialVelocity, Vector2f gravity, float particleLifeTime)
-			: base(position, initialVelocity, gravity, 0.01f, particleLifeTime)
+		protected Firework(Vector2f position, Vector2f initialVelocity, Vector2f gravity, float particleLifeTime, float spawnWaitTime)
+			: base(position, initialVelocity, gravity, spawnWaitTime, particleLifeTime)
 		{
 			Position = position;
 		}

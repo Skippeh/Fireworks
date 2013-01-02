@@ -8,9 +8,10 @@ namespace Fireworks
 	internal class BasicFirework : Firework
 	{
 		private readonly Sound whistleSound;
+		private bool exploded;
 
 		public BasicFirework(Vector2f position, Vector2f initialVelocity, Vector2f gravity)
-			: base(position, initialVelocity, gravity, 0.5f)
+			: base(position, initialVelocity, gravity, 0.5f, 0.01f)
 		{
 			whistleSound = SoundManager.Play("whistlingrocket_" + Helper.GetRandomNumber(1, 4), new Vector3f(Position.X, 0, Position.Y));
 			Modifiers.Add(new FadeModifier());

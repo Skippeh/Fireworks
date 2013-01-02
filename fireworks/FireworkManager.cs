@@ -24,7 +24,13 @@ namespace Fireworks
 		public static void SpawnFirework(int x, int y, int seed)
 		{
 			var random = new Random(seed);
-			fireworks.Add(new BasicFirework(new Vector2f(x, y), Helper.GetRandomVector2f(-50, -500, 50, -450, random), new Vector2f(0, 300)));
+			//fireworks.Add(new BasicFirework(new Vector2f(x, y), Helper.GetRandomVector2f(-50, -500, 50, -450, random), new Vector2f(0, 300)));
+			fireworks.Add(new TestFirework(new Vector2f(x, y), random));
+		}
+
+		public static void RemoveFirework(Firework firework)
+		{
+			fireworks.Remove(firework);
 		}
 	}
 }
