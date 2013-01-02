@@ -4,7 +4,7 @@ using SFML.Window;
 
 namespace Fireworks
 {
-	public class Helper
+	public static class Helper
 	{
 		private static Random random;
 
@@ -49,5 +49,14 @@ namespace Fireworks
 
 			return new Color(r, g, b);
 		}
+
+		#region Vector2f extensions
+
+		public static float Distance(this Vector2f v1, Vector2f v2)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }
