@@ -17,6 +17,10 @@ namespace Fireworks
 		private static Font font;
 		private static Text debugText;
 
+		private static Vector2i mouseDownPosition = new Vector2i();
+		private static bool drawAimLine = false;
+		private static bool isMouseDown = false;
+
 		static void Main(string[] args)
 		{
 			Running = true;
@@ -56,6 +60,8 @@ namespace Fireworks
 
 			wnd.KeyPressed += OnKeyPressed;
 			wnd.MouseButtonPressed += OnMouseButtonPressed;
+			wnd.MouseButtonReleased += OnMouseButtonReleased;
+			wnd.MouseMoved += OnMouseMoved;
 
 			Initialize();
 
@@ -75,11 +81,18 @@ namespace Fireworks
 			wnd.Close();
 		}
 
+		private static void OnMouseMoved(object sender, MouseMoveEventArgs e)
+		{
+			if (isMouseDown)
+				mouseDownPosition = new Vector2i(e.X, e.Y);
+		}
+
 		private static void Initialize()
 		{
 			Particle.Texture = new Texture(@"Data\Textures\Particle.png");
 
 			font = new Font(@"Data\Fonts\Minecraftia.ttf");
+
 			debugText = new Text("Hjello", font, 8)
 			{
 				Position = new Vector2f(10, 10)
@@ -94,7 +107,24 @@ namespace Fireworks
 		private static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
 		{
 			if (e.Button == Mouse.Button.Left)
-				NetworkManager.SpawnFirework(e.X, e.Y);
+			{
+				//NetworkManager.SpawnFirework(e.X, e.Y);
+				drawAimLine = true;
+				mouseDownPosition = new Vector2i(e.X, e.Y);
+			}
+		}
+
+		private static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
+		{
+			drawAimLine = false;
+
+			// Spawn firework with appropriate velocity
+			var mouseDownPositionF = new Vector2f(mouseDownPosition.X, mouseDownPosition.Y);
+
+			var mousePosition = Mouse.GetPosition(wnd);
+			var mousePositionF = new Vector2f(mousePosition.X, mousePosition.Y);
+
+			var distance = mouseDownPositionF.Distance(mousePositionF);
 		}
 
 		private const float maxWaitTime = 0.4f;
@@ -128,7 +158,21 @@ namespace Fireworks
 
 			FireworkManager.Draw(wnd, dt);
 
-			wnd.Draw(debugText);
+			if (drawAimLine)
+			{
+				var mouseDownPositionF = new Vector2f(mouseDownPosition.X, mouseDownPosition.Y);
+
+				var mousePosition = Mouse.GetPosition(wnd);
+				var mousePositionF = new Vector2f(mousePosition.X, mousePosition.Y);
+
+				Console.WriteLine("{" + mouseDownPositionF.X + "," + mouseDownPositionF.Y + "} - {" + mousePositionF.X + ", " + mousePositionF.Y + "}");
+
+				var vertices = new Vertex[2];
+				vertices[0] = new Vertex(mouseDownPositionF, Color.White);
+				vertices[1] = new Vertex(mousePositionF, Color.White);
+
+				wnd.Draw(vertices, PrimitiveType.Lines);
+			}
 
 			wnd.Display();
 		}
