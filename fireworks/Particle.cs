@@ -45,6 +45,11 @@ namespace Fireworks
 
 		public float CurrentLifeTime { get; set; }
 
+		/// <summary>
+		/// Invoked when the particle has died.
+		/// </summary>
+		public event EventHandler Dead;
+
 		private readonly Sprite drawable;
 
 		private readonly ConvexShape line = new ConvexShape(2);
@@ -86,6 +91,7 @@ namespace Fireworks
 				if (CurrentLifeTime >= MaxLifeTime)
 				{
 					ParentEmitter.RemoveParticle(this);
+					OnDead(new EventArgs());
 				}
 			}
 		}
@@ -98,6 +104,11 @@ namespace Fireworks
 			line.SetPoint(1, Position);
 
 			window.Draw(line);
+		}
+
+		protected virtual void OnDead(EventArgs args)
+		{
+			if (Dead != null) Dead(this, args);
 		}
 	}
 }
